@@ -34,9 +34,9 @@ struct WeatherAppView: View {
             Text("\(name)")
                 .font(.system(size: 30))
                 .bold()
-                .padding()
+                .padding(5)
             Text(weatherLabel)
-                .font(.system(size: 40))
+                .font(.system(size: 60))
             Text("\(description)")
             Text(treatTemperature(temperature))
                 .font(.headline)
@@ -74,6 +74,12 @@ struct WeatherAppView: View {
         return "\(Int(number)) °C"
     }
     
+    func treatNameOfTheCity(_ cityName: String) -> String {
+        let text = cityName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let textArray = text.split(separator: " ")
+        return textArray.joined(separator: "+").lowercased()
+    }
+    
     func treatWeatherDescriptions(description: String) -> String {
         if description.contains("clear") { return "☀️" }
         if description.contains("few") { return "🌤" }
@@ -89,7 +95,8 @@ struct WeatherAppView: View {
     
     func loadData() async {
         let key = ""
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(nameOfTheCity.lowercased())&appid=\(key)&units=metric") else {
+        let cityName = treatNameOfTheCity(nameOfTheCity)
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(cityName)&appid=\(key)&units=metric") else {
             print("can't make up URL from STRING")
             return
         }
